@@ -34,10 +34,12 @@ public class InputTester : UdonSharpBehaviour
 
     string[] doubleInputMessages;
     float[] lastInputTimes;
-    bool[] doubleInputTested;
+    TestStates[] doubleInputTested;
     DoubleInputTests[] allDoubleInputTestValues;
 
-    void Setup(TestController linkedTestController)
+    bool setupComplete = false;
+
+    public void Setup(TestController linkedTestController)
     {
         this.linkedTestController = linkedTestController;
 
@@ -47,14 +49,25 @@ public class InputTester : UdonSharpBehaviour
         doubleInputMessages = new string[maxTestTypeValue];
         lastInputTimes = new float[maxTestTypeValue];
         allDoubleInputTestValues = new DoubleInputTests[maxTestTypeValue];
-        doubleInputTested = new bool[maxTestTypeValue];
+        doubleInputTested = new TestStates[maxTestTypeValue];
 
         for(int i = 0; i< maxTestTypeValue; i++)
         {
             doubleInputMessages[i] = $"{doubleInputTestsAsString[i]} not getting called twice";
             lastInputTimes[i] = Mathf.Infinity;
             allDoubleInputTestValues[i] = (DoubleInputTests)i;
-            doubleInputTested[i] = false; //Should be done by default and hopefully is
+            doubleInputTested[i] = TestStates.NotYetRun; //Should be done by default and hopefully is
+        }
+
+        setupComplete = true;
+        Debug.Log("Setup complete");
+    }
+
+    public void SendTestStatesToController()
+    {
+        for(int i = 0; i< doubleInputTestsAsString.Length; i++)
+        {
+            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input);
         }
     }
 
@@ -91,6 +104,12 @@ public class InputTester : UdonSharpBehaviour
 
     private void Update()
     {
+        if (!setupComplete)
+        {
+            Debug.Log("Setup not complete");
+            return;
+        }
+
         //Double input tests
         foreach(DoubleInputTests test in allDoubleInputTestValues)
         {
@@ -102,12 +121,13 @@ public class InputTester : UdonSharpBehaviour
     {
         int index = (int)test;
 
-        if (!doubleInputTested[index])
+        if (doubleInputTested[index] == TestStates.NotYetRun)
         {
             if (Time.time < lastInputTimes[index]) return;
 
-            doubleInputTested[index] = true;
-            linkedTestController.TestFunction(true, doubleInputMessages[index], TestTypes.Input);
+            doubleInputTested[index] = TestStates.Passed;
+
+            linkedTestController.UpdateInputTester();
         }
     }
 
@@ -115,12 +135,13 @@ public class InputTester : UdonSharpBehaviour
     {
         int index = (int)test;
 
-        if (!doubleInputTested[index]) //Assumption: Doesn't happen when confirmed it doesn't.
+        if (doubleInputTested[index] == TestStates.NotYetRun) //Assumption: Doesn't happen when confirmed it doesn't.
         {
             if (lastInputTimes[index] == Time.time)
             {
-                doubleInputTested[index] = true;
-                linkedTestController.TestFunction(false, doubleInputMessages[index], TestTypes.Input);
+                doubleInputTested[index] = TestStates.Failed;
+
+                linkedTestController.UpdateInputTester();
             }
         }
 
