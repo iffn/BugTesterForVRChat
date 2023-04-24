@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
@@ -13,10 +14,10 @@ public class TestController : UdonSharpBehaviour
     int passCount = 0;
     int failCount = 0;
 
-    [SerializeField] InputTester linkedInputTester;
-    [SerializeField] TMPro.TextMeshProUGUI linkedInputTesterOutput;
+    [SerializeField] TMPro.TextMeshProUGUI linkedOutput;
 
-    string inputResult = "";
+    [SerializeField] BaseTest[] Tests;
+    string[] testResults;
 
     string[] testStateStrings = new string[]
     {
@@ -27,50 +28,56 @@ public class TestController : UdonSharpBehaviour
 
     private void Start()
     {
-        linkedInputTester.Setup(this);
+        //Setup
+        for(int i = 0; i < Tests.Length; i++)
+        {
+            Tests[i].Setup(this, i);
+        }
 
-        UpdateInputTester();
+        testResults = new string[Tests.Length];
+
+        //Initialize first results
+        UpdateAllTests();
     }
 
-    public void TestFunction(bool hasPassed, string description, TestTypes testType)
+    void UpdateAllTests()
     {
-        if (hasPassed)
+        foreach (BaseTest test in Tests)
         {
-            passedTests += $"{description} \n";
-            passCount++;
-        }
-        else
-        {
-            failedTests += $"{description} \n";
-            failCount++;
+            testResults[test.TestIndex] = "";
+            test.SendTestStatesToController();
         }
 
+        OutputTestResults();
+    }
+
+    void OutputTestResults()
+    {
+        //Update test result field
+        string testResult = "";
+
+        foreach (string result in testResults)
+        {
+            testResult += result + "\n";
+        }
+
+        linkedOutput.text = testResult;
     }
     
-    public void UpdateInputTester()
+    public void UpdateTest(BaseTest test)
     {
-        inputResult = "Inputs:\n";
+        //Update results of test
+        testResults[test.TestIndex] = "";
 
-        linkedInputTester.SendTestStatesToController();
+        test.SendTestStatesToController();
 
-        linkedInputTesterOutput.text = inputResult;
+        OutputTestResults();
     }
 
-    public void TestFunctionReply(TestStates testState, string description, TestTypes testType)
+    public void TestFunctionReply(TestStates testState, string description, TestTypes testType, BaseTest source)
     {
-        switch (testType)
-        {
-            case TestTypes.Math:
-                break;
-            case TestTypes.Input:
-                inputResult += $"{description}: {testStateStrings[(int)testState]}\n";
-                break;
-            default:
-                break;
-        }
+        testResults[source.TestIndex] += $"{description}: {testStateStrings[(int)testState]}\n";
     }
-
-    
 }
 
 public enum TestTypes

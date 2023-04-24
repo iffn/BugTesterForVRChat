@@ -709,8 +709,10 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 2074263662}
-  linkedInputTester: {fileID: 1089309913}
-  linkedInputTesterOutput: {fileID: 8766423130600119814}
+  linkedOutput: {fileID: 0}
+  Tests:
+  - {fileID: 1089309913}
+  testResults: []
 --- !u!4 &2074263664
 Transform:
   m_ObjectHideFlags: 0
@@ -1462,7 +1464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Inputs:'
+  m_text: 'Test results:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

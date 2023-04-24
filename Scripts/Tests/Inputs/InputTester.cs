@@ -1,19 +1,13 @@
 ﻿
-using System;
-using System.Linq;
 using UdonSharp;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
-public class InputTester : UdonSharpBehaviour
+public class InputTester : BaseTest
 {
-    TestController linkedTestController;
-
     string[] doubleInputTestsAsString = new string[] //Enum to string conversion not avaialble in U#
     {
         "UseDownRight",
@@ -39,9 +33,17 @@ public class InputTester : UdonSharpBehaviour
 
     bool setupComplete = false;
 
-    public void Setup(TestController linkedTestController)
+    public override string TestName
     {
-        this.linkedTestController = linkedTestController;
+        get
+        {
+            return "VRChat input events";
+        }
+    }
+
+    public override void Setup(TestController linkedTestController, int testIndex)
+    {
+        base.Setup(linkedTestController, testIndex);
 
         // int maxTestTypeValue = Enum.GetValues(typeof(TestTypes)).Cast<int>().Max(); //Not exposed in U#
         int maxTestTypeValue = doubleInputTestsAsString.Length;
@@ -63,11 +65,11 @@ public class InputTester : UdonSharpBehaviour
         Debug.Log("Setup complete");
     }
 
-    public void SendTestStatesToController()
+    public override void SendTestStatesToController()
     {
         for(int i = 0; i< doubleInputTestsAsString.Length; i++)
         {
-            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input);
+            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input, this);
         }
     }
 
@@ -127,7 +129,7 @@ public class InputTester : UdonSharpBehaviour
 
             doubleInputTested[index] = TestStates.Passed;
 
-            linkedTestController.UpdateInputTester();
+            linkedTestController.UpdateTest(this);
         }
     }
 
@@ -141,7 +143,7 @@ public class InputTester : UdonSharpBehaviour
             {
                 doubleInputTested[index] = TestStates.Failed;
 
-                linkedTestController.UpdateInputTester();
+                linkedTestController.UpdateTest(this);
             }
         }
 
