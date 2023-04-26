@@ -51,9 +51,12 @@ public class BasicMathVerifier : BaseTest
         sa = (short)ia;
         TestFunction(sa == 3, "Basic int to short casting");
 
+        //To be moved to crash script
+        /*
         ia = -2147483647;
         sa = (short)ia;
         TestFunction(sa == 1, "Int to short casting with rounding");
+        */
     }
 
 }

@@ -23,7 +23,55 @@ public class InputTester : BaseTest
         "DropDownLeft",
         "DropUpLeft",
         "JumpDown",
-        "JumpUp"
+        "JumpUp",
+        "LookHorizontal",
+        "LookVertical",
+        "MoveHorizontal",
+        "MoveVertical"
+    };
+
+    bool[] eventHappensOnPC = new bool[]
+    {
+        true, //UseDownRight
+        true, //UseUpRight
+        true, //GrabDownRight
+        true, //GrabUpRight
+        true, //DropDownRight
+        true, //DropUpRight
+        false, //UseDownLeft
+        false, //UseUpLeft
+        false, //GrabDownLeft
+        false, //GrabUpLeft
+        false, //DropDownLeft
+        false, //DropUpLeft
+        true, //JumpDown
+        true, //JumpUp
+        true, //LookHorizontal
+        true, //LookVertical
+        true, //MoveHorizontal
+        true //MoveVertical
+    };
+
+    bool[] eventHappensInVR = new bool[]
+    {
+        true, //UseDownRight
+        true, //UseUpRight
+        true, //GrabDownRight
+        true, //GrabUpRight
+        true, //DropDownRight
+        true, //DropUpRight
+        true, //UseDownLeft
+        true, //UseUpLeft
+        true, //GrabDownLeft
+        true, //GrabUpLeft
+        true, //DropDownLeft
+        true, //DropUpLeft
+        true, //JumpDown
+        true, //JumpUp
+        true, //LookHorizontal
+        true, //LookVertical
+        true, //MoveHorizontal
+        true //MoveVertical
     };
 
     string[] doubleInputMessages;
@@ -32,6 +80,9 @@ public class InputTester : BaseTest
     DoubleInputTests[] allDoubleInputTestValues;
 
     bool setupComplete = false;
+    bool inVR;
+
+    bool[] checkArray;
 
     public override string TestName
     {
@@ -47,7 +98,9 @@ public class InputTester : BaseTest
 
         // int maxTestTypeValue = Enum.GetValues(typeof(TestTypes)).Cast<int>().Max(); //Not exposed in U#
         int maxTestTypeValue = doubleInputTestsAsString.Length;
-        
+
+        checkArray = inVR ? eventHappensInVR : eventHappensOnPC;
+
         doubleInputMessages = new string[maxTestTypeValue];
         lastInputTimes = new float[maxTestTypeValue];
         allDoubleInputTestValues = new DoubleInputTests[maxTestTypeValue];
@@ -63,12 +116,16 @@ public class InputTester : BaseTest
 
         setupComplete = true;
         Debug.Log("Setup complete");
+
+        inVR = Networking.LocalPlayer.IsUserInVR();
     }
 
     public override void SendTestStatesToController()
     {
         for(int i = 0; i< doubleInputTestsAsString.Length; i++)
         {
+            if (!checkArray[i]) continue;
+
             linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input, this);
         }
     }
@@ -194,27 +251,34 @@ public class InputTester : BaseTest
 
     public override void InputLookVertical(float value, UdonInputEventArgs args)
     {
-        
+        CheckInputInEvent(DoubleInputTests.LookHorizontal);
     }
 
     public override void InputLookHorizontal(float value, UdonInputEventArgs args)
     {
-        
+        CheckInputInEvent(DoubleInputTests.LookVertical);
     }
 
     public override void InputMoveHorizontal(float value, UdonInputEventArgs args)
     {
-        
+        CheckInputInEvent(DoubleInputTests.MoveHorizontal);
     }
 
     public override void InputMoveVertical(float value, UdonInputEventArgs args)
     {
-        
+        CheckInputInEvent(DoubleInputTests.MoveVertical);
     }
 
     public override void InputJump(bool value, UdonInputEventArgs args)
     {
-        
+        if (value)
+        {
+            CheckInputInEvent(DoubleInputTests.JumpDown);
+        }
+        else
+        {
+            CheckInputInEvent(DoubleInputTests.JumpUp);
+        }
     }
 }
 
@@ -232,7 +296,10 @@ public enum DoubleInputTests
     GrabUpLeft,
     DropDownLeft,
     DropUpLeft,
-    DropUp,
     JumpDown,
-    JumpUp //Make sure to also update doubleInputTestsAsString
+    JumpUp,
+    LookHorizontal,
+    LookVertical,
+    MoveHorizontal,
+    MoveVertical//Make sure to also update doubleInputTestsAsString
 }
