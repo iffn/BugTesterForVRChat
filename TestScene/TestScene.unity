@@ -203,6 +203,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 22652981}
   changeGameObjectStateInSetup: 0
   changeScriptStateInSetup: 0
+  ShouldBeCalled: 0
 --- !u!1001 &512743070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -213,7 +214,7 @@ PrefabInstance:
     - target: {fileID: 1055321711490392694, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: blueprintId
-      value: wrld_976da46d-7d3d-4543-b23b-2d8bc4ed8e8e
+      value: wrld_ad6b9a62-8d60-404d-95cc-fa4639fcab8a
       objectReference: {fileID: 0}
     - target: {fileID: 1094421957795580606, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -294,7 +295,7 @@ PrefabInstance:
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
       propertyPath: NetworkIDs.Array.size
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
@@ -328,6 +329,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
         type: 3}
+      propertyPath: NetworkIDs.Array.data[5].ID
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[6].ID
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[7].ID
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[8].ID
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[9].ID
+      value: 19
+      objectReference: {fileID: 0}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
       propertyPath: DynamicMaterials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f5f33238476d1284dba2662f76df0f36, type: 2}
@@ -356,6 +382,31 @@ PrefabInstance:
       propertyPath: NetworkIDs.Array.data[4].gameObject
       value: 
       objectReference: {fileID: 631399271}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[5].gameObject
+      value: 
+      objectReference: {fileID: 1222750326}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[6].gameObject
+      value: 
+      objectReference: {fileID: 778950995}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[7].gameObject
+      value: 
+      objectReference: {fileID: 22652979}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[8].gameObject
+      value: 
+      objectReference: {fileID: 1045704524}
+    - target: {fileID: 6759095419728963412, guid: 8894fa7e4588a5c4fab98453e558847d,
+        type: 3}
+      propertyPath: NetworkIDs.Array.data[9].gameObject
+      value: 
+      objectReference: {fileID: 870835918}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8894fa7e4588a5c4fab98453e558847d, type: 3}
 --- !u!1 &631399271
@@ -440,6 +491,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 631399273}
   changeGameObjectStateInSetup: 0
   changeScriptStateInSetup: 0
+  ShouldBeCalled: 0
 --- !u!1 &778950995
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +574,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 778950997}
   changeGameObjectStateInSetup: 0
   changeScriptStateInSetup: 1
+  ShouldBeCalled: 0
 --- !u!1 &801898582
 GameObject:
   m_ObjectHideFlags: 0
@@ -790,6 +843,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 870835920}
   changeGameObjectStateInSetup: 0
   changeScriptStateInSetup: 1
+  ShouldBeCalled: 0
 --- !u!1 &1045704524
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +926,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 1045704526}
   changeGameObjectStateInSetup: 1
   changeScriptStateInSetup: 0
+  ShouldBeCalled: 0
 --- !u!1 &1089309910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,6 +1102,7 @@ MonoBehaviour:
   _udonSharpBackingUdonBehaviour: {fileID: 1222750328}
   changeGameObjectStateInSetup: 1
   changeScriptStateInSetup: 0
+  ShouldBeCalled: 0
 --- !u!1 &1240774408
 GameObject:
   m_ObjectHideFlags: 0
