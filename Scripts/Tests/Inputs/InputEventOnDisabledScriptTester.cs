@@ -53,7 +53,7 @@ public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
 
         shouldBeCalled = gameObjectEnabled && scriptEnabled;
 
-        description = $"Input event on GO from active {gameObject.activeSelf} to {gameObject.activeSelf ^ changeGameObjectStateInSetup} and script {(changeScriptStateInSetup ? "disabled" : "kept enabled")} {(shouldBeCalled ? "should be called" : "should not be called")}";
+        description = $"Input event on GO from active {gameObject.activeSelf} to {gameObject.activeSelf ^ changeGameObjectStateInSetup} and script {(changeScriptStateInSetup ? "disabled" : "kept enabled")}. Event {(shouldBeCalled ? "should be called" : "should not be called")}";
 
         enabled = scriptEnabled;
         gameObject.SetActive(gameObjectEnabled);
