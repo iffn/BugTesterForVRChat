@@ -11,6 +11,17 @@ public class InputTester : BaseTest
 {
     [SerializeField] InputEventOnDisabledScriptTester[] LinkedInputEventOnDisabledScriptTesters;
 
+    //General
+    bool setupComplete = false;
+    bool inVR;
+    bool useAndGrabAreTheSame;
+
+    //Double events
+    string[] doubleInputMessages;
+    float[] lastInputTimes;
+    TestStates[] doubleInputTested;
+    DoubleInputTests[] allDoubleInputTestValues;
+    bool[] inputEventHappensOnCurrentPlatform;
     string[] doubleInputTestsAsString = new string[] //Enum to string conversion not avaialble in U#
     {
         "UseDownRight",
@@ -33,7 +44,7 @@ public class InputTester : BaseTest
         "MoveVertical"
     };
 
-    bool[] eventHappensOnPC = new bool[]
+    bool[] inputEventHappensOnPC = new bool[]
     {
         true, //UseDownRight
         true, //UseUpRight
@@ -55,7 +66,7 @@ public class InputTester : BaseTest
         true //MoveVertical
     };
 
-    bool[] eventHappensInVR = new bool[]
+    bool[] inputEventHappensInVR = new bool[]
     {
         true, //UseDownRight
         true, //UseUpRight
@@ -77,17 +88,15 @@ public class InputTester : BaseTest
         true //MoveVertical
     };
 
-    string[] doubleInputMessages;
-    float[] lastInputTimes;
-    TestStates[] doubleInputTested;
-    DoubleInputTests[] allDoubleInputTestValues;
+    //Disabled scripts
     TestStates[] inputsOnDisabledScriptNotGettingCalledStates;
     string[] disabledScriptDescriptions;
+    bool disabledScriptInputsChecked = false;
 
-    bool setupComplete = false;
-    bool inVR;
-
-    bool[] checkArray;
+    //CallUseBeforeGrab
+    TestStates UseCalledBeforeGrabOnPCandVive;
+    float lastInputUseTimeForInputOrder;
+    float lastInputGrabTimeForInputOrder;
 
     public override string TestName
     {
@@ -103,11 +112,23 @@ public class InputTester : BaseTest
         base.Setup(linkedTestController, testIndex);
         inVR = Networking.LocalPlayer.IsUserInVR();
 
+        useAndGrabAreTheSame = !inVR;
+
+        string[] controllers = Input.GetJoystickNames();
+
+        foreach (string controller in controllers)
+        {
+            if (!controller.ToLower().Contains("vive")) continue;
+
+            useAndGrabAreTheSame = true;
+            break;
+        }
+
         //Double inputs
         // int maxTestTypeValue = Enum.GetValues(typeof(TestTypes)).Cast<int>().Max(); //Not exposed in U#
         int maxTestTypeValue = doubleInputTestsAsString.Length;
 
-        checkArray = inVR ? eventHappensInVR : eventHappensOnPC;
+        inputEventHappensOnCurrentPlatform = inVR ? inputEventHappensInVR : inputEventHappensOnPC;
 
         doubleInputMessages = new string[maxTestTypeValue];
         lastInputTimes = new float[maxTestTypeValue];
@@ -142,7 +163,7 @@ public class InputTester : BaseTest
     {
         for(int i = 0; i< doubleInputTestsAsString.Length; i++)
         {
-            if (!checkArray[i]) continue;
+            if (!inputEventHappensOnCurrentPlatform[i]) continue;
 
             linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input, this);
         }
@@ -151,6 +172,8 @@ public class InputTester : BaseTest
         {
             linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], TestTypes.Input, this);
         }
+
+        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on PC and Vive", TestTypes.Input, this);
     }
 
     //Example function replicated with arrays:
@@ -205,12 +228,17 @@ public class InputTester : BaseTest
 
         if (Time.time < lastInputTimes[index]) return;
 
-        for (int i = 0; i < LinkedInputEventOnDisabledScriptTesters.Length; i++)
+        if (!disabledScriptInputsChecked)
         {
-            if (inputsOnDisabledScriptNotGettingCalledStates[i] == TestStates.NotYetRun)
+            for (int i = 0; i < LinkedInputEventOnDisabledScriptTesters.Length; i++)
             {
-                inputsOnDisabledScriptNotGettingCalledStates[i] = LinkedInputEventOnDisabledScriptTesters[i].ShouldBeCalled ? TestStates.Failed : TestStates.Passed;
+                if (inputsOnDisabledScriptNotGettingCalledStates[i] == TestStates.NotYetRun)
+                {
+                    inputsOnDisabledScriptNotGettingCalledStates[i] = LinkedInputEventOnDisabledScriptTesters[i].ShouldBeCalled ? TestStates.Failed : TestStates.Passed;
+                }
             }
+
+            disabledScriptInputsChecked = true;
         }
 
         if (doubleInputTested[index] != TestStates.NotYetRun) return;
@@ -239,6 +267,16 @@ public class InputTester : BaseTest
 
     public override void InputUse(bool value, UdonInputEventArgs args)
     {
+        if(useAndGrabAreTheSame && UseCalledBeforeGrabOnPCandVive == TestStates.NotYetRun)
+        {
+            if(lastInputGrabTimeForInputOrder == Time.time)
+            {
+                UseCalledBeforeGrabOnPCandVive = TestStates.Failed;
+            }
+
+            lastInputUseTimeForInputOrder = Time.time;
+        }
+
         if (value)
         {
             if (args.handType == HandType.RIGHT) CheckInputInEvent(DoubleInputTests.UseDownRight);
@@ -253,6 +291,16 @@ public class InputTester : BaseTest
 
     public override void InputGrab(bool value, UdonInputEventArgs args)
     {
+        if (useAndGrabAreTheSame && UseCalledBeforeGrabOnPCandVive == TestStates.NotYetRun)
+        {
+            if (lastInputUseTimeForInputOrder == Time.time)
+            {
+                UseCalledBeforeGrabOnPCandVive = TestStates.Passed;
+            }
+
+            lastInputGrabTimeForInputOrder = Time.time;
+        }
+
         if (value)
         {
             if (args.handType == HandType.RIGHT) CheckInputInEvent(DoubleInputTests.GrabDownRight);
