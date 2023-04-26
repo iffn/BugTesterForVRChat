@@ -2,12 +2,15 @@
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VRC.Collections;
 using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common;
 
 public class InputTester : BaseTest
 {
+    [SerializeField] InputEventOnDisabledScriptTester[] LinkedInputEventOnDisabledScriptTesters;
+
     string[] doubleInputTestsAsString = new string[] //Enum to string conversion not avaialble in U#
     {
         "UseDownRight",
@@ -78,6 +81,8 @@ public class InputTester : BaseTest
     float[] lastInputTimes;
     TestStates[] doubleInputTested;
     DoubleInputTests[] allDoubleInputTestValues;
+    TestStates[] inputsOnDisabledScriptNotGettingCalledStates;
+    string[] disabledScriptDescriptions;
 
     bool setupComplete = false;
     bool inVR;
@@ -94,8 +99,11 @@ public class InputTester : BaseTest
 
     public override void Setup(TestController linkedTestController, int testIndex)
     {
+        //General
         base.Setup(linkedTestController, testIndex);
+        inVR = Networking.LocalPlayer.IsUserInVR();
 
+        //Double inputs
         // int maxTestTypeValue = Enum.GetValues(typeof(TestTypes)).Cast<int>().Max(); //Not exposed in U#
         int maxTestTypeValue = doubleInputTestsAsString.Length;
 
@@ -114,10 +122,20 @@ public class InputTester : BaseTest
             doubleInputTested[i] = TestStates.NotYetRun; //Should be done by default and hopefully is
         }
 
+        //InputsOnDisabledScriptNotGettingCalled
+        inputsOnDisabledScriptNotGettingCalledStates = new TestStates[LinkedInputEventOnDisabledScriptTesters.Length];
+        disabledScriptDescriptions = new string[LinkedInputEventOnDisabledScriptTesters.Length];
+
+        for(int i = 0;i< LinkedInputEventOnDisabledScriptTesters.Length; i++)
+        {
+            inputsOnDisabledScriptNotGettingCalledStates[i] = TestStates.NotYetRun;
+            LinkedInputEventOnDisabledScriptTesters[i].Setup(this, i);
+            disabledScriptDescriptions[i] = LinkedInputEventOnDisabledScriptTesters[i].Description;
+        }
+
+        //Finalize
         setupComplete = true;
         Debug.Log("Setup complete");
-
-        inVR = Networking.LocalPlayer.IsUserInVR();
     }
 
     public override void SendTestStatesToController()
@@ -127,6 +145,11 @@ public class InputTester : BaseTest
             if (!checkArray[i]) continue;
 
             linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input, this);
+        }
+
+        for (int i = 0; i < LinkedInputEventOnDisabledScriptTesters.Length; i++)
+        {
+            linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], TestTypes.Input, this);
         }
     }
 
@@ -180,14 +203,21 @@ public class InputTester : BaseTest
     {
         int index = (int)test;
 
-        if (doubleInputTested[index] == TestStates.NotYetRun)
+        if (Time.time < lastInputTimes[index]) return;
+
+        for (int i = 0; i < LinkedInputEventOnDisabledScriptTesters.Length; i++)
         {
-            if (Time.time < lastInputTimes[index]) return;
-
-            doubleInputTested[index] = TestStates.Passed;
-
-            linkedTestController.UpdateTest(this);
+            if (inputsOnDisabledScriptNotGettingCalledStates[i] == TestStates.NotYetRun)
+            {
+                inputsOnDisabledScriptNotGettingCalledStates[i] = LinkedInputEventOnDisabledScriptTesters[i].ShouldBeCalled ? TestStates.Failed : TestStates.Passed;
+            }
         }
+
+        if (doubleInputTested[index] != TestStates.NotYetRun) return;
+
+        doubleInputTested[index] = TestStates.Passed;
+
+        linkedTestController.UpdateTest(this);
     }
 
     void CheckInputInEvent(DoubleInputTests test)
@@ -279,6 +309,14 @@ public class InputTester : BaseTest
         {
             CheckInputInEvent(DoubleInputTests.JumpUp);
         }
+    }
+
+    public void InputEventReceivedFromDisabledScript(InputEventOnDisabledScriptTester linkedTester, TestStates newState)
+    {
+        if (inputsOnDisabledScriptNotGettingCalledStates[linkedTester.Index] == newState) return;
+
+        inputsOnDisabledScriptNotGettingCalledStates[linkedTester.Index] = newState;
+        linkedTestController.UpdateTest(this);
     }
 }
 

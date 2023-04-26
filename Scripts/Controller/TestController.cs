@@ -21,9 +21,9 @@ public class TestController : UdonSharpBehaviour
 
     string[] testStateStrings = new string[]
     {
-        "NotYetRun",
-        "Passed",
-        "Failed"
+        "<color=yellow>NotYetRun</color>",
+        "<color=#00FFFF>Passed</color>",
+        "<color=red>Failed</color>"
     };
 
     private void Start()
