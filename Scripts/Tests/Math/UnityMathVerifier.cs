@@ -26,7 +26,7 @@ public class UnityMathVerifier : BaseTest
 
     void TestFunction(bool passed, string message, string knownLink = "")
     {
-        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink, TestTypes.Input, this);
+        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink, TestTypes.Math, this);
     }
 
     public override void SendTestStatesToController()
@@ -68,7 +68,7 @@ public class UnityMathVerifier : BaseTest
         TestFunction(V3IA.x == 0 && V3IA.y == 1 && V3IA.z == 2, "Vector3Int.x .y .z = value", "");
         
         V2IA.Clamp(Vector2Int.one, Vector2Int.one);
-        TestFunction(V2IA.x == 1 && V2IA.y == 1, "Vector2Int.Clamp", "");
+        TestFunction(V2IA.x == 1 && V2IA.y == 1, "Vector2Int.Clamp", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/vector3intclamp-doesnt-change-anything");
 
         V3IA.Clamp(Vector3Int.one, Vector3Int.one);
         TestFunction(V3IA.x == 1 && V3IA.y == 1 && V3IA.z == 1, "Vector3Int.Clamp", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/vector3intclamp-doesnt-change-anything");
