@@ -272,7 +272,7 @@ public class InputTester : BaseTest
             linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], disabledScriptLinks[i], TestTypes.Input, this);
         }
 
-        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on PC and Vive", callUseBeforeGrabLinks[0], callUseBeforeGrabLinks[1], callUseBeforeGrabLinks[2], callUseBeforeGrabLinks[3], TestTypes.Input, this);
+        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on Desktop and Vive", callUseBeforeGrabLinks[0], callUseBeforeGrabLinks[1], callUseBeforeGrabLinks[2], callUseBeforeGrabLinks[3], TestTypes.Input, this);
     }
 
     //Example function replicated with arrays:
