@@ -14,9 +14,9 @@ public class BasicMathVerifier : BaseTest
         }
     }
 
-    public override void Setup(TestController linkedTestController, int testIndex)
+    public override void Setup(TestController linkedTestController, int testIndex, Platforms currentPlatform)
     {
-        base.Setup(linkedTestController, testIndex);
+        base.Setup(linkedTestController, testIndex, currentPlatform);
     }
 
     void Start()
@@ -24,9 +24,9 @@ public class BasicMathVerifier : BaseTest
         
     }
 
-    void TestFunction(bool passed, string message)
+    void TestFunction(bool passed, string message, string knownLink = "")
     {
-        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, TestTypes.Input, this);
+        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink, TestTypes.Input, this);
     }
 
     public override void SendTestStatesToController()

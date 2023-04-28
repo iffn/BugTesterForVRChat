@@ -32,6 +32,8 @@ public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
         }
     }
 
+    public string KnownLink { get; private set; }
+
     bool shouldBeCalled;
     public bool ShouldBeCalled;
         /*
@@ -50,6 +52,8 @@ public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
 
         bool gameObjectEnabled = gameObject.activeInHierarchy ^ changeGameObjectStateInSetup;
         bool scriptEnabled = !changeScriptStateInSetup;
+
+        if (gameObject.activeInHierarchy && changeGameObjectStateInSetup) KnownLink = "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/input-events-like-inputjump-inputuse-still-triggered-if-the-gameobject-is-disabl";
 
         shouldBeCalled = gameObjectEnabled && scriptEnabled;
 

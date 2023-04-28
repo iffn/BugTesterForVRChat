@@ -14,6 +14,8 @@ public class TestController : UdonSharpBehaviour
     int passCount = 0;
     int failCount = 0;
 
+    public Platforms currentPlatform { get; private set; }
+
     [SerializeField] TMPro.TextMeshProUGUI linkedOutput;
 
     [SerializeField] BaseTest[] Tests;
@@ -28,10 +30,27 @@ public class TestController : UdonSharpBehaviour
 
     private void Start()
     {
-        //Setup
-        for(int i = 0; i < Tests.Length; i++)
+        
+
+        #if UNITY_EDITOR
+        currentPlatform = Platforms.ClientSim;
+        #elif UNITY_ANDROID
+            currentPlatform = Platforms.Quest;
+        #else
+        if (Networking.LocalPlayer.IsUserInVR())
         {
-            Tests[i].Setup(this, i);
+            currentPlatform = Platforms.PCVR;
+        }
+        else
+        {
+            currentPlatform = Platforms.Desktop;
+        }
+        #endif
+
+        //Setup
+        for (int i = 0; i < Tests.Length; i++)
+        {
+            Tests[i].Setup(this, i, currentPlatform);
         }
 
         testResults = new string[Tests.Length];
@@ -74,7 +93,12 @@ public class TestController : UdonSharpBehaviour
         OutputTestResults();
     }
 
-    public void TestFunctionReply(TestStates testState, string description, TestTypes testType, BaseTest source)
+    public void TestFunctionReply(TestStates testState, string description, string knownLink, TestTypes testType, BaseTest source)
+    {
+        TestFunctionReply(testState, description, knownLink, knownLink, knownLink, knownLink, testType, source);
+    }
+
+    public void TestFunctionReply(TestStates testState, string description, string knownLinkCliendSim, string knownLinkDesktop, string knownLinkPCVR, string knownLinkQuest, TestTypes testType, BaseTest source)
     {
         testResults[source.TestIndex] += $"{description}: {testStateStrings[(int)testState]}\n";
     }
@@ -91,4 +115,12 @@ public enum TestStates
     NotYetRun,
     Passed,
     Failed
+}
+
+public enum Platforms
+{
+    ClientSim,
+    Desktop,
+    PCVR,
+    Quest
 }

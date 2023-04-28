@@ -14,9 +14,9 @@ public class UnityMathVerifier : BaseTest
         }
     }
 
-    public override void Setup(TestController linkedTestController, int testIndex)
+    public override void Setup(TestController linkedTestController, int testIndex, Platforms currentPlatform)
     {
-        base.Setup(linkedTestController, testIndex);
+        base.Setup(linkedTestController, testIndex, currentPlatform);
     }
 
     void Start()
@@ -24,9 +24,9 @@ public class UnityMathVerifier : BaseTest
 
     }
 
-    void TestFunction(bool passed, string message)
+    void TestFunction(bool passed, string message, string knownLink = "")
     {
-        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, TestTypes.Input, this);
+        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink, TestTypes.Input, this);
     }
 
     public override void SendTestStatesToController()
@@ -39,9 +39,7 @@ public class UnityMathVerifier : BaseTest
         //Vector math
         V3IA = new Vector3Int(0, 1, 2);
         V3IA.Clamp(Vector3Int.one, Vector3Int.one);
-        TestFunction(V3IA.x == 1 && V3IA.y == 1 && V3IA.z == 1, "Clamp Vector3Int");
-
-
+        TestFunction(V3IA.x == 1 && V3IA.y == 1 && V3IA.z == 1, "Clamp Vector3Int", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/vector3intclamp-doesnt-change-anything");
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿
+using System.Runtime.InteropServices.WindowsRuntime;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,15 +89,111 @@ public class InputTester : BaseTest
         true //MoveVertical
     };
 
+    string[] knownDoubleInputLinkClientSim = new string[]
+    {
+        "", //UseDownRight
+        "", //UseUpRight
+        "", //GrabDownRight
+        "", //GrabUpRight
+        "", //DropDownRight
+        "", //DropUpRight
+        "", //UseDownLeft
+        "", //UseUpLeft
+        "", //GrabDownLeft
+        "", //GrabUpLeft
+        "", //DropDownLeft
+        "", //DropUpLeft
+        "", //JumpDown
+        "", //JumpUp
+        "", //LookHorizontal
+        "", //LookVertical
+        "", //MoveHorizontal
+        "" //MoveVertical
+    };
+
+    string[] knownDoubleInputLinkDesktop = new string[]
+    {
+        "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/1275-inputuse-is-called-twice-per-mouse-click", //UseDownRight
+        "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/1275-inputuse-is-called-twice-per-mouse-click", //UseUpRight
+        "", //GrabDownRight
+        "", //GrabUpRight
+        "", //DropDownRight
+        "", //DropUpRight
+        "", //UseDownLeft
+        "", //UseUpLeft
+        "", //GrabDownLeft
+        "", //GrabUpLeft
+        "", //DropDownLeft
+        "", //DropUpLeft
+        "", //JumpDown
+        "", //JumpUp
+        "", //LookHorizontal
+        "", //LookVertical
+        "", //MoveHorizontal
+        "" //MoveVertical
+    };
+
+    string[] knownDoubleInputLinkPCVR = new string[]
+    {
+        "", //UseDownRight
+        "", //UseUpRight
+        "", //GrabDownRight
+        "", //GrabUpRight
+        "", //DropDownRight
+        "", //DropUpRight
+        "", //UseDownLeft
+        "", //UseUpLeft
+        "", //GrabDownLeft
+        "", //GrabUpLeft
+        "", //DropDownLeft
+        "", //DropUpLeft
+        "", //JumpDown
+        "", //JumpUp
+        "", //LookHorizontal
+        "", //LookVertical
+        "", //MoveHorizontal
+        "" //MoveVertical
+    };
+
+    string[] knownDoubleInputLinkQuest = new string[]
+    {
+        "", //UseDownRight
+        "", //UseUpRight
+        "", //GrabDownRight
+        "", //GrabUpRight
+        "", //DropDownRight
+        "", //DropUpRight
+        "", //UseDownLeft
+        "", //UseUpLeft
+        "", //GrabDownLeft
+        "", //GrabUpLeft
+        "", //DropDownLeft
+        "", //DropUpLeft
+        "", //JumpDown
+        "", //JumpUp
+        "", //LookHorizontal
+        "", //LookVertical
+        "", //MoveHorizontal
+        "" //MoveVertical
+    };
+
     //Disabled scripts
     TestStates[] inputsOnDisabledScriptNotGettingCalledStates;
     string[] disabledScriptDescriptions;
+    string[] disabledScriptLinks;
     bool disabledScriptInputsChecked = false;
 
     //CallUseBeforeGrab
     TestStates UseCalledBeforeGrabOnPCandVive;
     float lastInputUseTimeForInputOrder;
     float lastInputGrabTimeForInputOrder;
+    string[] callUseBeforeGrabLinks = new string[]
+    {
+        "https://github.com/vrchat-community/ClientSim/issues/71", //ClientSim
+        "", //Desktop
+        "", //PCVR
+        "" //Quest
+    };
 
     public override string TestName
     {
@@ -106,10 +203,10 @@ public class InputTester : BaseTest
         }
     }
 
-    public override void Setup(TestController linkedTestController, int testIndex)
+    public override void Setup(TestController linkedTestController, int testIndex, Platforms currentPlatform)
     {
         //General
-        base.Setup(linkedTestController, testIndex);
+        base.Setup(linkedTestController, testIndex, currentPlatform);
         inVR = Networking.LocalPlayer.IsUserInVR();
 
         useAndGrabAreTheSame = !inVR;
@@ -146,11 +243,13 @@ public class InputTester : BaseTest
         //InputsOnDisabledScriptNotGettingCalled
         inputsOnDisabledScriptNotGettingCalledStates = new TestStates[LinkedInputEventOnDisabledScriptTesters.Length];
         disabledScriptDescriptions = new string[LinkedInputEventOnDisabledScriptTesters.Length];
+        disabledScriptLinks = new string[LinkedInputEventOnDisabledScriptTesters.Length];
 
-        for(int i = 0;i< LinkedInputEventOnDisabledScriptTesters.Length; i++)
+        for (int i = 0;i< LinkedInputEventOnDisabledScriptTesters.Length; i++)
         {
             inputsOnDisabledScriptNotGettingCalledStates[i] = TestStates.NotYetRun;
             LinkedInputEventOnDisabledScriptTesters[i].Setup(this, i);
+            disabledScriptLinks[i] = LinkedInputEventOnDisabledScriptTesters[i].KnownLink;
             disabledScriptDescriptions[i] = LinkedInputEventOnDisabledScriptTesters[i].Description;
         }
 
@@ -165,15 +264,15 @@ public class InputTester : BaseTest
         {
             if (!inputEventHappensOnCurrentPlatform[i]) continue;
 
-            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], TestTypes.Input, this);
+            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], knownDoubleInputLinkClientSim[i], knownDoubleInputLinkDesktop[i], knownDoubleInputLinkPCVR[i], knownDoubleInputLinkQuest[i], TestTypes.Input, this);
         }
 
         for (int i = 0; i < LinkedInputEventOnDisabledScriptTesters.Length; i++)
         {
-            linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], TestTypes.Input, this);
+            linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], disabledScriptLinks[i], TestTypes.Input, this);
         }
 
-        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on PC and Vive", TestTypes.Input, this);
+        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on PC and Vive", callUseBeforeGrabLinks[0], callUseBeforeGrabLinks[1], callUseBeforeGrabLinks[2], callUseBeforeGrabLinks[3], TestTypes.Input, this);
     }
 
     //Example function replicated with arrays:
