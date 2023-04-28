@@ -6,6 +6,12 @@ using VRC.Udon;
 
 public class UnityMathVerifier : BaseTest
 {
+    [SerializeField] Vector2 Vector2SetTo12;
+    [SerializeField] Vector3 Vector3SetTo123;
+
+    [SerializeField] Vector2Int Vector2IntSetTo12;
+    [SerializeField] Vector3Int Vector3IntSetTo123;
+
     public override string TestName
     {
         get
@@ -39,7 +45,13 @@ public class UnityMathVerifier : BaseTest
         V3A = new Vector3(1f, 1f, 1f);
         TestFunction(V3A.x == 1f && V3A.y == 1f && V3A.z == 1f, "Vector3 constructor", "");
 
+        TestFunction(Vector2SetTo12.x == 1 && Vector2SetTo12.y == 2, "Vector2 assignment in inspector", "");
+        TestFunction(Vector3SetTo123.x == 1 && Vector3SetTo123.y == 2 && Vector3SetTo123.z == 3, "Vector3 assignment in inspector", "");
+
         //Int Vector math
+        TestFunction(Vector2IntSetTo12.x == 1 && Vector2IntSetTo12.y == 2, "Vector2Int assignment in inspector", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/202202161913public-vector2int-and-vector3int-variables-reset-to-0");
+        TestFunction(Vector3IntSetTo123.x == 1 && Vector3IntSetTo123.y == 2 && Vector3IntSetTo123.z == 3, "Vector3Int assignment in inspector", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/202202161913public-vector2int-and-vector3int-variables-reset-to-0");
+
         Vector3Int V3IA;
         Vector2Int V2IA;
 
