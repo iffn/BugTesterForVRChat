@@ -117,6 +117,15 @@ public enum TestStates
     Failed
 }
 
+public enum TestResults
+{
+    NotYetRun,      //Grey
+    ExpectedPass,   //Green
+    SurprisePass,   //Blue
+    ExpectedFail,   //Yellow
+    SurpriseFail    //Purple
+}
+
 public enum Platforms
 {
     ClientSim,
