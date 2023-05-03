@@ -17,6 +17,7 @@ public class TestController : UdonSharpBehaviour
     public Platforms currentPlatform { get; private set; }
 
     [SerializeField] TMPro.TextMeshProUGUI linkedOutput;
+    [SerializeField] ResultDisplay ResultDisplayPrefab;
 
     [SerializeField] BaseTest[] Tests;
     string[] testResults;
