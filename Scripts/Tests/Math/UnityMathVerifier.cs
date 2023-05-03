@@ -32,7 +32,7 @@ public class UnityMathVerifier : BaseTest
 
     void TestFunction(bool passed, string message, string knownLink = "")
     {
-        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink, TestTypes.Math, this);
+        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink == "", knownLink, TestTypes.Math, this);
     }
 
     public override void SendTestStatesToController()

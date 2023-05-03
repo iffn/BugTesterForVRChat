@@ -89,29 +89,7 @@ public class InputTester : BaseTest
         true //MoveVertical
     };
 
-    string[] knownDoubleInputLinkClientSim = new string[]
-    {
-        "", //UseDownRight
-        "", //UseUpRight
-        "", //GrabDownRight
-        "", //GrabUpRight
-        "", //DropDownRight
-        "", //DropUpRight
-        "", //UseDownLeft
-        "", //UseUpLeft
-        "", //GrabDownLeft
-        "", //GrabUpLeft
-        "", //DropDownLeft
-        "", //DropUpLeft
-        "", //JumpDown
-        "", //JumpUp
-        "", //LookHorizontal
-        "", //LookVertical
-        "", //MoveHorizontal
-        "" //MoveVertical
-    };
-
-    string[] knownDoubleInputLinkDesktop = new string[]
+    string[] knownDoubleInputLink = new string[]
     {
         "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/1275-inputuse-is-called-twice-per-mouse-click", //UseDownRight
         "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/1275-inputuse-is-called-twice-per-mouse-click", //UseUpRight
@@ -133,66 +111,114 @@ public class InputTester : BaseTest
         "" //MoveVertical
     };
 
-    string[] knownDoubleInputLinkPCVR = new string[]
+    bool[] knownDoubleInputIssueClientSim = new bool[]
     {
-        "", //UseDownRight
-        "", //UseUpRight
-        "", //GrabDownRight
-        "", //GrabUpRight
-        "", //DropDownRight
-        "", //DropUpRight
-        "", //UseDownLeft
-        "", //UseUpLeft
-        "", //GrabDownLeft
-        "", //GrabUpLeft
-        "", //DropDownLeft
-        "", //DropUpLeft
-        "", //JumpDown
-        "", //JumpUp
-        "", //LookHorizontal
-        "", //LookVertical
-        "", //MoveHorizontal
-        "" //MoveVertical
+        false, //UseDownRight
+        false, //UseUpRight
+        false, //GrabDownRight
+        false, //GrabUpRight
+        false, //DropDownRight
+        false, //DropUpRight
+        false, //UseDownLeft
+        false, //UseUpLeft
+        false, //GrabDownLeft
+        false, //GrabUpLeft
+        false, //DropDownLeft
+        false, //DropUpLeft
+        false, //JumpDown
+        false, //JumpUp
+        false, //LookHorizontal
+        false, //LookVertical
+        false, //MoveHorizontal
+        false //MoveVertical
     };
 
-    string[] knownDoubleInputLinkQuest = new string[]
+    bool[] knownDoubleInputIssueDesktop = new bool[]
     {
-        "", //UseDownRight
-        "", //UseUpRight
-        "", //GrabDownRight
-        "", //GrabUpRight
-        "", //DropDownRight
-        "", //DropUpRight
-        "", //UseDownLeft
-        "", //UseUpLeft
-        "", //GrabDownLeft
-        "", //GrabUpLeft
-        "", //DropDownLeft
-        "", //DropUpLeft
-        "", //JumpDown
-        "", //JumpUp
-        "", //LookHorizontal
-        "", //LookVertical
-        "", //MoveHorizontal
-        "" //MoveVertical
+        true, //UseDownRight
+        true, //UseUpRight
+        false, //GrabDownRight
+        false, //GrabUpRight
+        false, //DropDownRight
+        false, //DropUpRight
+        false, //UseDownLeft
+        false, //UseUpLeft
+        false, //GrabDownLeft
+        false, //GrabUpLeft
+        false, //DropDownLeft
+        false, //DropUpLeft
+        false, //JumpDown
+        false, //JumpUp
+        false, //LookHorizontal
+        false, //LookVertical
+        false, //MoveHorizontal
+        false //MoveVertical
+    };
+
+    bool[] knownDoubleInputIssuePCVR = new bool[]
+    {
+        false, //UseDownRight
+        false, //UseUpRight
+        false, //GrabDownRight
+        false, //GrabUpRight
+        false, //DropDownRight
+        false, //DropUpRight
+        false, //UseDownLeft
+        false, //UseUpLeft
+        false, //GrabDownLeft
+        false, //GrabUpLeft
+        false, //DropDownLeft
+        false, //DropUpLeft
+        false, //JumpDown
+        false, //JumpUp
+        false, //LookHorizontal
+        false, //LookVertical
+        false, //MoveHorizontal
+        false //MoveVertical
+    };
+
+    bool[] knownDoubleInputIssueQuest = new bool[]
+    {
+        false, //UseDownRight
+        false, //UseUpRight
+        false, //GrabDownRight
+        false, //GrabUpRight
+        false, //DropDownRight
+        false, //DropUpRight
+        false, //UseDownLeft
+        false, //UseUpLeft
+        false, //GrabDownLeft
+        false, //GrabUpLeft
+        false, //DropDownLeft
+        false, //DropUpLeft
+        false, //JumpDown
+        false, //JumpUp
+        false, //LookHorizontal
+        false, //LookVertical
+        false, //MoveHorizontal
+        false //MoveVertical
     };
 
     //Disabled scripts
     TestStates[] inputsOnDisabledScriptNotGettingCalledStates;
     string[] disabledScriptDescriptions;
     string[] disabledScriptLinks;
+    bool[] knownDisabledScriptIssue;
     bool disabledScriptInputsChecked = false;
 
     //CallUseBeforeGrab
     TestStates UseCalledBeforeGrabOnPCandVive;
     float lastInputUseTimeForInputOrder;
     float lastInputGrabTimeForInputOrder;
-    string[] callUseBeforeGrabLinks = new string[]
+
+    string callUseBeforeGrabLink = "https://github.com/vrchat-community/ClientSim/issues/71";
+
+    bool[] callUseBeforeGrabIssues = new bool[]
     {
-        "https://github.com/vrchat-community/ClientSim/issues/71", //ClientSim
-        "", //Desktop
-        "", //PCVR
-        "" //Quest
+        true, //ClientSim
+        false, //Desktop
+        false, //PCVR
+        false //Quest
     };
 
     public override string TestName
@@ -244,6 +270,7 @@ public class InputTester : BaseTest
         inputsOnDisabledScriptNotGettingCalledStates = new TestStates[LinkedInputEventOnDisabledScriptTesters.Length];
         disabledScriptDescriptions = new string[LinkedInputEventOnDisabledScriptTesters.Length];
         disabledScriptLinks = new string[LinkedInputEventOnDisabledScriptTesters.Length];
+        knownDisabledScriptIssue = new bool[LinkedInputEventOnDisabledScriptTesters.Length];
 
         for (int i = 0;i< LinkedInputEventOnDisabledScriptTesters.Length; i++)
         {
@@ -255,7 +282,6 @@ public class InputTester : BaseTest
 
         //Finalize
         setupComplete = true;
-        Debug.Log("Setup complete");
     }
 
     public override void SendTestStatesToController()
@@ -264,15 +290,15 @@ public class InputTester : BaseTest
         {
             if (!inputEventHappensOnCurrentPlatform[i]) continue;
 
-            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], knownDoubleInputLinkClientSim[i], knownDoubleInputLinkDesktop[i], knownDoubleInputLinkPCVR[i], knownDoubleInputLinkQuest[i], TestTypes.Input, this);
+            linkedTestController.TestFunctionReply(doubleInputTested[i], doubleInputMessages[i], knownDoubleInputIssueClientSim[i], knownDoubleInputIssueDesktop[i], knownDoubleInputIssuePCVR[i], knownDoubleInputIssueQuest[i], knownDoubleInputLink[i], TestTypes.Input, this);
         }
 
         for (int i = 0; i < LinkedInputEventOnDisabledScriptTesters.Length; i++)
         {
-            linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], disabledScriptLinks[i], TestTypes.Input, this);
+            linkedTestController.TestFunctionReply(inputsOnDisabledScriptNotGettingCalledStates[i], disabledScriptDescriptions[i], knownDisabledScriptIssue[i], disabledScriptLinks[i], TestTypes.Input, this);
         }
 
-        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on Desktop and Vive", callUseBeforeGrabLinks[0], callUseBeforeGrabLinks[1], callUseBeforeGrabLinks[2], callUseBeforeGrabLinks[3], TestTypes.Input, this);
+        if(useAndGrabAreTheSame) linkedTestController.TestFunctionReply(UseCalledBeforeGrabOnPCandVive, "Use is called before grab on Desktop and Vive", callUseBeforeGrabIssues[0], callUseBeforeGrabIssues[1], callUseBeforeGrabIssues[2], callUseBeforeGrabIssues[3], callUseBeforeGrabLink, TestTypes.Input, this);
     }
 
     //Example function replicated with arrays:

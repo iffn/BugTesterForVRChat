@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: IWillCrash
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 964d9f2ba5ac0f44989abf29d31b0100,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 82bd93643c95a2b41990c3868e133a45,
     type: 2}
   udonAssembly: 
   assemblyError: 
