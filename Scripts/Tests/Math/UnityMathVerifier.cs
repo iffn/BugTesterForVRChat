@@ -32,7 +32,12 @@ public class UnityMathVerifier : BaseTest
 
     void TestFunction(bool passed, string message, string knownLink = "")
     {
-        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink == "", knownLink, TestTypes.Math, this);
+        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownLink != "", knownLink, TestTypes.Math, this);
+    }
+
+    void TestFunction(bool passed, string message, bool knownIssueCliendSim, bool knownIssueDesktop, bool knownIssuePCVR, bool knownIssueQuest, string knownLink = "")
+    {
+        linkedTestController.TestFunctionReply(passed ? TestStates.Passed : TestStates.Failed, message, knownIssueCliendSim, knownIssueDesktop, knownIssuePCVR, knownIssueQuest, knownLink, TestTypes.Math, this);
     }
 
     public override void SendTestStatesToController()
@@ -49,8 +54,8 @@ public class UnityMathVerifier : BaseTest
         TestFunction(Vector3SetTo123.x == 1 && Vector3SetTo123.y == 2 && Vector3SetTo123.z == 3, "Vector3 assignment in inspector", "");
 
         //Int Vector math
-        TestFunction(Vector2IntSetTo12.x == 1 && Vector2IntSetTo12.y == 2, "Vector2Int assignment in inspector", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/202202161913public-vector2int-and-vector3int-variables-reset-to-0");
-        TestFunction(Vector3IntSetTo123.x == 1 && Vector3IntSetTo123.y == 2 && Vector3IntSetTo123.z == 3, "Vector3Int assignment in inspector", "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/202202161913public-vector2int-and-vector3int-variables-reset-to-0");
+        TestFunction(Vector2IntSetTo12.x == 1 && Vector2IntSetTo12.y == 2, "Vector2Int assignment in inspector", false, true, true, true, "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/202202161913public-vector2int-and-vector3int-variables-reset-to-0");
+        TestFunction(Vector3IntSetTo123.x == 1 && Vector3IntSetTo123.y == 2 && Vector3IntSetTo123.z == 3, "Vector3Int assignment in inspector", false, true, true, true, "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/202202161913public-vector2int-and-vector3int-variables-reset-to-0");
 
         Vector3Int V3IA;
         Vector2Int V2IA;

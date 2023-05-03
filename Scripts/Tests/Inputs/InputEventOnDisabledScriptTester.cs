@@ -55,11 +55,13 @@ public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
         bool gameObjectEnabled = gameObject.activeInHierarchy ^ changeGameObjectStateInSetup;
         bool scriptEnabled = !changeScriptStateInSetup;
 
-        KnownIssue = (gameObject.activeInHierarchy && changeGameObjectStateInSetup);
+        KnownIssue = gameObject.activeInHierarchy && !gameObjectEnabled;
 
         shouldBeCalled = gameObjectEnabled && scriptEnabled;
 
-        description = $"Input event on GO from active {gameObject.activeSelf} to {gameObject.activeSelf ^ changeGameObjectStateInSetup} and script {(changeScriptStateInSetup ? "disabled" : "kept enabled")}. Event {(shouldBeCalled ? "should be called" : "should not be called")}";
+        gameObject.name = shouldBeCalled ? "Yes" : "No";
+
+        description = $"Input event on GO from active {gameObject.activeInHierarchy} to {gameObjectEnabled} and script {(changeScriptStateInSetup ? "disabled" : "kept enabled")}. Event {(shouldBeCalled ? "should be called" : "should not be called")}";
 
         enabled = scriptEnabled;
         gameObject.SetActive(gameObjectEnabled);
@@ -68,6 +70,8 @@ public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
     void CheckTestState()
     {
         linkedInputTester.InputEventReceivedFromDisabledScript(this, (shouldBeCalled ? TestStates.Passed : TestStates.Failed));
+
+        gameObject.name += " -> Called";
     }
 
     public override void InputUse(bool value, UdonInputEventArgs args)

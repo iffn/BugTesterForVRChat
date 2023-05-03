@@ -278,6 +278,7 @@ public class InputTester : BaseTest
             LinkedInputEventOnDisabledScriptTesters[i].Setup(this, i);
             disabledScriptLinks[i] = LinkedInputEventOnDisabledScriptTesters[i].KnownLink;
             disabledScriptDescriptions[i] = LinkedInputEventOnDisabledScriptTesters[i].Description;
+            knownDisabledScriptIssue[i] = LinkedInputEventOnDisabledScriptTesters[i].KnownIssue;
         }
 
         //Finalize

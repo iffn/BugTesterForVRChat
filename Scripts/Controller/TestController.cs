@@ -18,7 +18,39 @@ public class TestController : UdonSharpBehaviour
     [SerializeField] ResultBlockDisplay ResultDisplayPrefab;
     [SerializeField] BaseTest[] Tests;
 
-    ResultBlockDisplay[][] resultDisplays;
+    [SerializeField] string NotYetRunColorHash;
+    [SerializeField] string ExpectedPassColorHash;
+    [SerializeField] string SurprisePassColorHash;
+    [SerializeField] string ExpectedFailColorHash;
+    [SerializeField] string SurpriseFailColorHash;
+
+    string ColorHashFromResult(TestResults result)
+    {
+        string mainColor = NotYetRunColorHash;
+
+        switch (result)
+        {
+            case TestResults.NotYetRun:
+                mainColor = NotYetRunColorHash;
+                break;
+            case TestResults.ExpectedPass:
+                mainColor = ExpectedPassColorHash;
+                break;
+            case TestResults.SurprisePass:
+                mainColor = SurprisePassColorHash;
+                break;
+            case TestResults.ExpectedFail:
+                mainColor = ExpectedFailColorHash;
+                break;
+            case TestResults.SurpriseFail:
+                mainColor = SurpriseFailColorHash;
+                break;
+            default:
+                break;
+        }
+
+        return mainColor;
+    }
 
     string[] testResults;
 
@@ -54,25 +86,6 @@ public class TestController : UdonSharpBehaviour
         
         testResults = new string[Tests.Length]; //To be removed
 
-        //Setup results
-        resultDisplays = new ResultBlockDisplay[Tests.Length][];
-
-        for(int i = 0; i < resultDisplays.Length; i++)
-        {
-            resultDisplays[i] = new ResultBlockDisplay[50];
-
-            for (int j = 0; j < resultDisplays[i].Length; j++)
-            {
-                GameObject newObject = GameObject.Instantiate(ResultDisplayPrefab.gameObject);
-
-                newObject.transform.parent = TestsResultHolder;
-
-                newObject.SetActive(false);
-
-                resultDisplays[i][j] = newObject.transform.GetComponent<ResultBlockDisplay>();
-            }
-        }
-
         Debug.Log("Controller complete");
 
         //Initialize first results
@@ -81,14 +94,11 @@ public class TestController : UdonSharpBehaviour
         Debug.Log("All tests initialized");
     }
 
-    int testCounter = 0;
-
     void UpdateAllTests()
     {
         foreach (BaseTest test in Tests)
         {
-            testResults[test.TestIndex] = "";
-            testCounter = 0;
+            testResults[test.TestIndex] = $"{test.TestName}:\n";
             test.SendTestStatesToController();
         }
 
@@ -111,7 +121,7 @@ public class TestController : UdonSharpBehaviour
     public void UpdateTest(BaseTest test)
     {
         //Update results of test
-        testResults[test.TestIndex] = "";
+        testResults[test.TestIndex] = $"{test.TestName}:\n";
 
         test.SendTestStatesToController();
 
@@ -164,10 +174,100 @@ public class TestController : UdonSharpBehaviour
             }
         }
 
-        resultDisplays[source.TestIndex][testCounter].SetDisplay(description, knownIssueCliendSim, knownIssueDesktop, knownIssuePCVR, knownIssueQuest, issueLink, result);
-        resultDisplays[source.TestIndex][testCounter].gameObject.SetActive(true);
+        string resultString = "";
 
-        testCounter++;
+        switch (result)
+        {
+            case TestResults.NotYetRun:
+                resultString = "Not yet run";
+                break;
+            case TestResults.ExpectedPass:
+                resultString = "Passed as expected";
+                break;
+            case TestResults.SurprisePass:
+                resultString = "Passed surprisingly";
+                break;
+            case TestResults.ExpectedFail:
+                resultString = "Failed as expected";
+                break;
+            case TestResults.SurpriseFail:
+                resultString = "Failed unexpectedly";
+                break;
+            default:
+                break;
+        }
+
+        string colorValue = ColorHashFromResult(result);
+
+        string knownIssueString = PlatformString(knownIssueCliendSim, knownIssueDesktop, knownIssuePCVR, knownIssueQuest);
+
+        testResults[source.TestIndex] += $"{description}: <color=#{colorValue}>{resultString}</color>. {knownIssueString}.\n";
+    }
+
+    string PlatformString(bool knownIssueCliendSim, bool knownIssueDesktop, bool knownIssuePCVR, bool knownIssueQuest)
+    {
+        string returnString;
+        if (!knownIssueCliendSim && !knownIssueDesktop && !knownIssuePCVR && !knownIssueQuest)
+        {
+            returnString = "Not a known issue";
+        }
+        else if (knownIssueCliendSim && knownIssueDesktop && knownIssuePCVR && knownIssueQuest)
+        {
+            returnString = $"<color=#{ExpectedFailColorHash}>Known issue on all platforms</color>";
+        }
+        else
+        {
+            int counter = 0;
+            if (knownIssueCliendSim) counter++;
+            if (knownIssueDesktop) counter++;
+            if (knownIssuePCVR) counter++;
+            if (knownIssueQuest) counter++;
+
+            returnString = $"<color=#{ExpectedFailColorHash}>Known issue on ";
+
+            if(counter == 1)
+            {
+                if (knownIssueCliendSim) returnString += "ClientSim";
+                else if (knownIssueDesktop) returnString += "Desktop";
+                else if (knownIssuePCVR) returnString += "PCVR";
+                else if (knownIssueQuest) returnString += "Quest";
+
+                return returnString += "</color>";
+            }
+
+            if (knownIssueCliendSim)
+            {
+                returnString += "ClientSim";
+                counter--;
+                if (counter > 1) returnString += ", ";
+            }
+            if (knownIssueDesktop)
+            {
+                if (counter == 1)
+                {
+                    returnString += " and Desktop</color>";
+                    return returnString;
+                }
+
+                returnString += "Desktop";
+                counter--;
+                if (counter > 1) returnString += ", ";
+            }
+            if (knownIssuePCVR)
+            {
+                if (counter == 1)
+                {
+                    returnString += " and PCVR</color>";
+                    return returnString;
+                }
+
+                returnString += "PCVR";
+            }
+
+            returnString += " and Quest</color>";
+        }
+
+        return returnString;
     }
 }
 
