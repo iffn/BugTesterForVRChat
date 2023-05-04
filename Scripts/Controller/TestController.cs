@@ -27,7 +27,11 @@ public class TestController : UdonSharpBehaviour
     [SerializeField] BugController bugControllerPrefab;
     [SerializeField] Transform BugSpawnLocation;
 
+    [SerializeField] Transform LinkedLinkFieldHolder;
+    [SerializeField] LinkField LinkHolderPrefab;
+
     BugController[] bugControllers = new BugController[100];
+    LinkField[] linkHolders = new LinkField[100];
 
     string ColorHashFromResult(TestResults result)
     {
@@ -83,9 +87,18 @@ public class TestController : UdonSharpBehaviour
         }
         
         testResults = new string[Tests.Length]; //To be removed
-        
+
+        for (int i = 0; i < linkHolders.Length; i++)
+        {
+            GameObject newLink = GameObject.Instantiate(LinkHolderPrefab.gameObject, LinkedLinkFieldHolder);
+
+            newLink.SetActive(false);
+
+            linkHolders[i] = newLink.GetComponent<LinkField>();
+        }
+
         //Create bugs
-        for(int i = 0; i<bugControllers.Length; i++)
+        for (int i = 0; i<bugControllers.Length; i++)
         {
             GameObject newBug = GameObject.Instantiate(bugControllerPrefab.gameObject, BugSpawnLocation);
 
@@ -98,16 +111,25 @@ public class TestController : UdonSharpBehaviour
         UpdateAllTests();
     }
 
-    int testCounter = 0;
+    int testCounterForBugs = 0;
+    int lineCounterForLinks = 0;
     void UpdateAllTests()
     {
-        testCounter = 0;
+        testCounterForBugs = 0;
 
         foreach (BaseTest test in Tests)
         {
+            linkHolders[lineCounterForLinks].Setup("");//Add empty line for title
+            lineCounterForLinks++;
+            
             testResults[test.TestIndex] = $"{test.TestName}:\n";
             test.SendTestStatesToController();
+
+            linkHolders[lineCounterForLinks].Setup("");//Add empty line for empty line
+            lineCounterForLinks++;
         }
+
+        lineCounterForLinks = -1;
 
         OutputTestResults();
     }
@@ -117,7 +139,7 @@ public class TestController : UdonSharpBehaviour
         //Update test result field
         string testResult = "";
 
-        testCounter = 0;
+        testCounterForBugs = 0;
 
         foreach (string result in testResults)
         {
@@ -212,15 +234,22 @@ public class TestController : UdonSharpBehaviour
 
         testResults[source.TestIndex] += $"{description}: <color=#{colorValue}>{resultString}</color>. {knownIssueString}.\n";
 
-        if(!bugControllers[testCounter].gameObject.activeSelf && (result == TestResults.ExpectedFail || result == TestResults.SurpriseFail))
+        if(lineCounterForLinks > 0)
         {
-            bugControllers[testCounter].gameObject.SetActive(true);
-
-            if (result == TestResults.ExpectedFail) bugControllers[testCounter].material = ExpectedFailMaterial;
-            if (result == TestResults.SurpriseFail) bugControllers[testCounter].material = SurpriseFailMaterial;
+            linkHolders[lineCounterForLinks].Setup(issueLink);
+            lineCounterForLinks++;
         }
 
-        testCounter++;
+        //Bugs
+        if(!bugControllers[testCounterForBugs].gameObject.activeSelf && (result == TestResults.ExpectedFail || result == TestResults.SurpriseFail))
+        {
+            bugControllers[testCounterForBugs].gameObject.SetActive(true);
+
+            if (result == TestResults.ExpectedFail) bugControllers[testCounterForBugs].material = ExpectedFailMaterial;
+            if (result == TestResults.SurpriseFail) bugControllers[testCounterForBugs].material = SurpriseFailMaterial;
+        }
+
+        testCounterForBugs++;
     }
 
     string PlatformString(bool knownIssueCliendSim, bool knownIssueDesktop, bool knownIssuePCVR, bool knownIssueQuest)
