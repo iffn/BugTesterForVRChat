@@ -8,9 +8,6 @@ using VRC.Udon;
 
 public class TestController : UdonSharpBehaviour
 {
-    string passedTests = "";
-    string failedTests = "";
-
     public Platforms currentPlatform { get; private set; }
 
     [SerializeField] TMPro.TextMeshProUGUI linkedOutput;
@@ -62,13 +59,6 @@ public class TestController : UdonSharpBehaviour
 
     string[] testResults;
 
-    string[] testStateStrings = new string[]
-    {
-        "<color=yellow>NotYetRun</color>",
-        "<color=#00FFFF>Passed</color>",
-        "<color=red>Failed</color>"
-    };
-
     private void Start()
     {
         #if UNITY_EDITOR
@@ -97,11 +87,9 @@ public class TestController : UdonSharpBehaviour
         //Create bugs
         for(int i = 0; i<bugControllers.Length; i++)
         {
-            GameObject newBug = GameObject.Instantiate(bugControllerPrefab.gameObject);
+            GameObject newBug = GameObject.Instantiate(bugControllerPrefab.gameObject, BugSpawnLocation);
 
             newBug.SetActive(false);
-
-            newBug.transform.position = BugSpawnLocation.position;
 
             bugControllers[i] = newBug.GetComponent<BugController>();
         }
