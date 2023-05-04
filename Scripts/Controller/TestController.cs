@@ -24,6 +24,13 @@ public class TestController : UdonSharpBehaviour
     [SerializeField] string ExpectedFailColorHash;
     [SerializeField] string SurpriseFailColorHash;
 
+    [SerializeField] Material ExpectedFailMaterial;
+    [SerializeField] Material SurpriseFailMaterial;
+
+    [SerializeField] BugController bugControllerPrefab;
+
+    BugController[] bugControllers = new BugController[100];
+
     string ColorHashFromResult(TestResults result)
     {
         string mainColor = NotYetRunColorHash;
@@ -85,17 +92,28 @@ public class TestController : UdonSharpBehaviour
         }
         
         testResults = new string[Tests.Length]; //To be removed
+        
+        //Create bugs
+        for(int i = 0; i<bugControllers.Length; i++)
+        {
+            GameObject newBug = GameObject.Instantiate(bugControllerPrefab.gameObject);
 
-        Debug.Log("Controller complete");
+            newBug.SetActive(false);
+
+            newBug.transform.position = transform.position;
+
+            bugControllers[i] = newBug.GetComponent<BugController>();
+        }
 
         //Initialize first results
         UpdateAllTests();
-
-        Debug.Log("All tests initialized");
     }
 
+    int testCounter = 0;
     void UpdateAllTests()
     {
+        testCounter = 0;
+
         foreach (BaseTest test in Tests)
         {
             testResults[test.TestIndex] = $"{test.TestName}:\n";
@@ -109,6 +127,8 @@ public class TestController : UdonSharpBehaviour
     {
         //Update test result field
         string testResult = "";
+
+        testCounter = 0;
 
         foreach (string result in testResults)
         {
@@ -202,6 +222,16 @@ public class TestController : UdonSharpBehaviour
         string knownIssueString = PlatformString(knownIssueCliendSim, knownIssueDesktop, knownIssuePCVR, knownIssueQuest);
 
         testResults[source.TestIndex] += $"{description}: <color=#{colorValue}>{resultString}</color>. {knownIssueString}.\n";
+
+        if(!bugControllers[testCounter].gameObject.activeSelf && (result == TestResults.ExpectedFail || result == TestResults.SurpriseFail))
+        {
+            bugControllers[testCounter].gameObject.SetActive(true);
+
+            if (result == TestResults.ExpectedFail) bugControllers[testCounter].material = ExpectedFailMaterial;
+            if (result == TestResults.SurpriseFail) bugControllers[testCounter].material = SurpriseFailMaterial;
+        }
+
+        testCounter++;
     }
 
     string PlatformString(bool knownIssueCliendSim, bool knownIssueDesktop, bool knownIssuePCVR, bool knownIssueQuest)
