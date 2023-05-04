@@ -28,6 +28,7 @@ public class TestController : UdonSharpBehaviour
     [SerializeField] Material SurpriseFailMaterial;
 
     [SerializeField] BugController bugControllerPrefab;
+    [SerializeField] Transform BugSpawnLocation;
 
     BugController[] bugControllers = new BugController[100];
 
@@ -100,7 +101,7 @@ public class TestController : UdonSharpBehaviour
 
             newBug.SetActive(false);
 
-            newBug.transform.position = transform.position;
+            newBug.transform.position = BugSpawnLocation.position;
 
             bugControllers[i] = newBug.GetComponent<BugController>();
         }

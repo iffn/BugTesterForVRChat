@@ -27,7 +27,6 @@ public class BugController : UdonSharpBehaviour
         }
     }
 
-
     public void SetNextTarget()
     {
         target = new Vector3(Random.Range(-maxDistanceFromOrigin, maxDistanceFromOrigin), 0, Random.Range(-maxDistanceFromOrigin, maxDistanceFromOrigin));
@@ -36,9 +35,8 @@ public class BugController : UdonSharpBehaviour
 
         reached = false;
 
-        SendCustomEventDelayedSeconds(nameof(SetNextTarget), 10, VRC.Udon.Common.Enums.EventTiming.Update);
+        SendCustomEventDelayedSeconds(nameof(SetNextTarget), Random.Range(5f, 10f), VRC.Udon.Common.Enums.EventTiming.Update);
     }
-
 
     private void Start()
     {
