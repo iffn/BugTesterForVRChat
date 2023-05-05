@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: 8754515827231568327
+  scriptID: -1118326081680411185
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -50,19 +50,19 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: <currentPlatform>k__BackingField
+      Data: <CurrentPlatform>k__BackingField
     - Name: $v
       Entry: 7
       Data: 2|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
     - Name: <Name>k__BackingField
       Entry: 1
-      Data: <currentPlatform>k__BackingField
+      Data: <CurrentPlatform>k__BackingField
     - Name: <UserType>k__BackingField
       Entry: 7
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Platforms, Assembly-CSharp
+      Data: BugTesterForVRChat.Platforms, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -242,7 +242,7 @@ MonoBehaviour:
       Data: 15|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: ResultBlockDisplay, Assembly-CSharp
+      Data: BugTesterForVRChat.ResultBlockDisplay, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -308,7 +308,7 @@ MonoBehaviour:
       Data: 20|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: BaseTest[], Assembly-CSharp
+      Data: BugTesterForVRChat.BaseTest[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -764,7 +764,7 @@ MonoBehaviour:
       Data: 48|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: BugController, Assembly-CSharp
+      Data: BugTesterForVRChat.BugController, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -932,7 +932,7 @@ MonoBehaviour:
       Data: 58|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: LinkField, Assembly-CSharp
+      Data: BugTesterForVRChat.LinkField, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -992,7 +992,7 @@ MonoBehaviour:
       Data: 62|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: BugController[], Assembly-CSharp
+      Data: BugTesterForVRChat.BugController[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -1046,7 +1046,7 @@ MonoBehaviour:
       Data: 65|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: LinkField[], Assembly-CSharp
+      Data: BugTesterForVRChat.LinkField[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

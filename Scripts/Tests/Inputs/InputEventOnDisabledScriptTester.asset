@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: -2873733871978547880
+  scriptID: 525047696245076917
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: InputTester, Assembly-CSharp
+      Data: BugTesterForVRChat.InputTester, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

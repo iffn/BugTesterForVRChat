@@ -1,43 +1,44 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common;
 
-public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
+namespace BugTesterForVRChat
 {
-    InputTester linkedInputTester;
-
-    public bool changeGameObjectStateInSetup;
-    public bool changeScriptStateInSetup;
-
-    bool alreadyCalled = false;
-
-    int index;
-    public int Index
+    public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
     {
-        get
+        InputTester linkedInputTester;
+
+        public bool changeGameObjectStateInSetup;
+        public bool changeScriptStateInSetup;
+
+        bool alreadyCalled = false;
+
+        int index;
+        public int Index
         {
-            return index;
+            get
+            {
+                return index;
+            }
         }
-    }
 
-    string description;
-    public string Description
-    {
-        get
+        string description;
+        public string Description
         {
-            return description;
+            get
+            {
+                return description;
+            }
         }
-    }
 
-    public string KnownLink { get; private set; } = "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/input-events-like-inputjump-inputuse-still-triggered-if-the-gameobject-is-disabl";
+        public string KnownLink { get; private set; } = "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/input-events-like-inputjump-inputuse-still-triggered-if-the-gameobject-is-disabl";
 
-    public bool KnownIssue { get; private set; }
+        public bool KnownIssue { get; private set; }
 
-    bool shouldBeCalled;
-    public bool ShouldBeCalled;
+        bool shouldBeCalled;
+        public bool ShouldBeCalled;
         /*
     {
         get
@@ -47,94 +48,95 @@ public class InputEventOnDisabledScriptTester : UdonSharpBehaviour
     }
         */
 
-    public void Setup(InputTester linkedInputTester, int index)
-    {
-        this.linkedInputTester = linkedInputTester;
-        this.index = index;
+        public void Setup(InputTester linkedInputTester, int index)
+        {
+            this.linkedInputTester = linkedInputTester;
+            this.index = index;
 
-        bool gameObjectEnabled = gameObject.activeInHierarchy ^ changeGameObjectStateInSetup;
-        bool scriptEnabled = !changeScriptStateInSetup;
+            bool gameObjectEnabled = gameObject.activeInHierarchy ^ changeGameObjectStateInSetup;
+            bool scriptEnabled = !changeScriptStateInSetup;
 
-        KnownIssue = gameObject.activeInHierarchy && !gameObjectEnabled;
+            KnownIssue = gameObject.activeInHierarchy && !gameObjectEnabled;
 
-        shouldBeCalled = gameObjectEnabled && scriptEnabled;
+            shouldBeCalled = gameObjectEnabled && scriptEnabled;
 
-        gameObject.name = shouldBeCalled ? "Yes" : "No";
+            gameObject.name = shouldBeCalled ? "Yes" : "No";
 
-        description = $"Input event on GO from active {gameObject.activeInHierarchy} to {gameObjectEnabled} and script {(changeScriptStateInSetup ? "disabled" : "kept enabled")}. Event {(shouldBeCalled ? "should be called" : "should not be called")}";
+            description = $"Input event on GO from active {gameObject.activeInHierarchy} to {gameObjectEnabled} and script {(changeScriptStateInSetup ? "disabled" : "kept enabled")}. Event {(shouldBeCalled ? "should be called" : "should not be called")}";
 
-        enabled = scriptEnabled;
-        gameObject.SetActive(gameObjectEnabled);
-    }
+            enabled = scriptEnabled;
+            gameObject.SetActive(gameObjectEnabled);
+        }
 
-    void CheckTestState()
-    {
-        linkedInputTester.InputEventReceivedFromDisabledScript(this, (shouldBeCalled ? TestStates.Passed : TestStates.Failed));
+        void CheckTestState()
+        {
+            linkedInputTester.InputEventReceivedFromDisabledScript(this, shouldBeCalled ? TestStates.Passed : TestStates.Failed);
 
-        gameObject.name += " -> Called";
-    }
+            gameObject.name += " -> Called";
+        }
 
-    public override void InputUse(bool value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputUse(bool value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputGrab(bool value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputGrab(bool value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputDrop(bool value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputDrop(bool value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputLookVertical(float value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputLookVertical(float value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputLookHorizontal(float value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputLookHorizontal(float value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputMoveHorizontal(float value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputMoveHorizontal(float value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputMoveVertical(float value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputMoveVertical(float value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
-    }
+            CheckTestState();
+        }
 
-    public override void InputJump(bool value, UdonInputEventArgs args)
-    {
-        if (alreadyCalled) return;
-        alreadyCalled = true;
+        public override void InputJump(bool value, UdonInputEventArgs args)
+        {
+            if (alreadyCalled) return;
+            alreadyCalled = true;
 
-        CheckTestState();
+            CheckTestState();
+        }
     }
 }

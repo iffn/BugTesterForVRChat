@@ -21,7 +21,7 @@ MonoBehaviour:
   compiledVersion: 2
   behaviourSyncMode: 0
   hasInteractEvent: 0
-  scriptID: -7255996735914887933
+  scriptID: 1630834924434928227
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -62,7 +62,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: TestController, Assembly-CSharp
+      Data: BugTesterForVRChat.TestController, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -176,7 +176,7 @@ MonoBehaviour:
       Data: 10|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Platforms, Assembly-CSharp
+      Data: BugTesterForVRChat.Platforms, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -230,7 +230,7 @@ MonoBehaviour:
       Data: 13|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: InputEventOnDisabledScriptTester[], Assembly-CSharp
+      Data: BugTesterForVRChat.InputEventOnDisabledScriptTester[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -554,7 +554,7 @@ MonoBehaviour:
       Data: 31|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: TestStates[], Assembly-CSharp
+      Data: BugTesterForVRChat.TestStates[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -614,7 +614,7 @@ MonoBehaviour:
       Data: 35|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: DoubleInputTests[], Assembly-CSharp
+      Data: BugTesterForVRChat.DoubleInputTests[], Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 
@@ -1346,7 +1346,7 @@ MonoBehaviour:
       Data: 67|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: TestStates, Assembly-CSharp
+      Data: BugTesterForVRChat.TestStates, Assembly-CSharp
     - Name: 
       Entry: 8
       Data: 

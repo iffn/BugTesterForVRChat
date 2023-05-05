@@ -7,26 +7,28 @@ using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 using UnityEngine.UI;
 
-
-public class ImageLoaderTest : UdonSharpBehaviour
+namespace BugTesterForVRChat
 {
-    [SerializeField] 
-    VRCImageDownloader currentImageDownloader;
-
-    [SerializeField] Material linkedMaterial;
-    [SerializeField] VRCUrl url;
-    [SerializeField] Image linkedImage;
-
-    void Start()
+    public class ImageLoaderTest : UdonSharpBehaviour
     {
-        currentImageDownloader = new VRCImageDownloader();
+        [SerializeField] VRCImageDownloader currentImageDownloader;
 
-        currentImageDownloader.DownloadImage(url, linkedMaterial, (IUdonEventReceiver)this);
-    }
+        [SerializeField] Material linkedMaterial;
+        [SerializeField] VRCUrl url;
+        [SerializeField] Image linkedImage;
 
-    public override void OnImageLoadSuccess(IVRCImageDownload result)
-    {
-        //Set material to image after load to refresh Unity image
-        linkedImage.material = linkedMaterial;
+        void Start()
+        {
+            currentImageDownloader = new VRCImageDownloader();
+
+            currentImageDownloader.DownloadImage(url, linkedMaterial, (IUdonEventReceiver)this);
+        }
+
+        public override void OnImageLoadSuccess(IVRCImageDownload result)
+        {
+            //Set material to image after load to refresh Unity image
+            linkedImage.material = linkedMaterial;
+        }
     }
 }
+

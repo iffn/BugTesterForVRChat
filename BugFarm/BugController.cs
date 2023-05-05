@@ -1,66 +1,68 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-public class BugController : UdonSharpBehaviour
+namespace BugTesterForVRChat
 {
-    [SerializeField] MeshRenderer linkedMeshRenderer;
-    [SerializeField] float maxDistanceFromOrigin = 5;
-    [SerializeField] float movementSpeed = 1;
-    [SerializeField] float rotationSpeed = 1;
-    [SerializeField] float holdDistance = 1;
-
-    public Vector3 target = Vector3.zero;
-
-    public double updateTime;
-
-    float sqrHoldDistance;
-    bool reached = false;
-
-    public Material material
+    public class BugController : UdonSharpBehaviour
     {
-        set
+        [SerializeField] MeshRenderer linkedMeshRenderer;
+        [SerializeField] float maxDistanceFromOrigin = 5;
+        [SerializeField] float movementSpeed = 1;
+        [SerializeField] float rotationSpeed = 1;
+        [SerializeField] float holdDistance = 1;
+
+        public Vector3 target = Vector3.zero;
+
+        public double updateTime;
+
+        float sqrHoldDistance;
+        bool reached = false;
+
+        public Material material
         {
-            linkedMeshRenderer.material = value;
+            set
+            {
+                linkedMeshRenderer.material = value;
+            }
         }
-    }
 
-    public void SetNextTarget()
-    {
-        target = new Vector3(Random.Range(-maxDistanceFromOrigin, maxDistanceFromOrigin), 0, Random.Range(-maxDistanceFromOrigin, maxDistanceFromOrigin));
+        public void SetNextTarget()
+        {
+            target = new Vector3(Random.Range(-maxDistanceFromOrigin, maxDistanceFromOrigin), 0, Random.Range(-maxDistanceFromOrigin, maxDistanceFromOrigin));
 
-        if (transform.parent != null) target += transform.parent.position;
+            if (transform.parent != null) target += transform.parent.position;
 
-        reached = false;
+            reached = false;
 
-        SendCustomEventDelayedSeconds(nameof(SetNextTarget), Random.Range(5f, 10f), VRC.Udon.Common.Enums.EventTiming.Update);
-    }
+            SendCustomEventDelayedSeconds(nameof(SetNextTarget), Random.Range(5f, 10f), VRC.Udon.Common.Enums.EventTiming.Update);
+        }
 
-    private void Start()
-    {
-        SetNextTarget();
+        private void Start()
+        {
+            SetNextTarget();
 
-        sqrHoldDistance = holdDistance * holdDistance;
-    }
+            sqrHoldDistance = holdDistance * holdDistance;
+        }
 
-    private void Update()
-    {
-        System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        private void Update()
+        {
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
-        sw.Start();
+            sw.Start();
 
-        if (reached) return;
+            if (reached) return;
 
-        reached = (transform.position - target).sqrMagnitude < sqrHoldDistance;
+            reached = (transform.position - target).sqrMagnitude < sqrHoldDistance;
 
-        transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, target - transform.position, rotationSpeed * Time.deltaTime, 0f));
+            transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, target - transform.position, rotationSpeed * Time.deltaTime, 0f));
 
-        transform.Translate(Time.deltaTime * movementSpeed  * Vector3.forward);
+            transform.Translate(Time.deltaTime * movementSpeed * Vector3.forward);
 
-        sw.Stop();
+            sw.Stop();
 
-        updateTime = sw.Elapsed.TotalSeconds * 1000;
+            updateTime = sw.Elapsed.TotalSeconds * 1000;
+        }
     }
 }
