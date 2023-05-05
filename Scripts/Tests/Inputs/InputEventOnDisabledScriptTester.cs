@@ -33,7 +33,7 @@ namespace BugTesterForVRChat
             }
         }
 
-        public string KnownLink { get; private set; } = "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/input-events-like-inputjump-inputuse-still-triggered-if-the-gameobject-is-disabl";
+        public string KnownLink { get; private set; } = "";
 
         public bool KnownIssue { get; private set; }
 
@@ -57,6 +57,8 @@ namespace BugTesterForVRChat
             bool scriptEnabled = !changeScriptStateInSetup;
 
             KnownIssue = gameObject.activeInHierarchy && !gameObjectEnabled;
+
+            if(KnownIssue) KnownLink = "https://feedback.vrchat.com/vrchat-udon-closed-alpha-bugs/p/input-events-like-inputjump-inputuse-still-triggered-if-the-gameobject-is-disabl";
 
             shouldBeCalled = gameObjectEnabled && scriptEnabled;
 
