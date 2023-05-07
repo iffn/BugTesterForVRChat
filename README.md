@@ -1,6 +1,6 @@
 # BugTesterForVRChat
 
-A prefab that will automatically test if U# scripts work the way they should.
+A prefab that will automatically test if U# functions work the way they should.
 The prefab can be added to your world as a simple dashboard. Unexpected results will be highlighted with a special color.
 
 The prefab is currently mostly focused on currently reported bugs. The covered bugs are listed here:
