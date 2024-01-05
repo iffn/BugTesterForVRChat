@@ -1,8 +1,5 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using UnityEngine.UI;
-using VRC.Collections;
 using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common;
